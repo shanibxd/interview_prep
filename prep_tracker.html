@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>14-Day Interview Prep Tracker</title>
+<style>
+  :root {
+    --bg: #f5f5f2;
+    --card: #ffffff;
+    --ink: #1c1c1a;
+    --ink-soft: #6b6b64;
+    --line: #e4e2dc;
+    --accent: #b5461f;
+    --accent-soft: #f1e2da;
+    --accent-2: #2f5d4f;
+    --accent-2-soft: #e3ede9;
+    --done-bg: #eef5ee;
+    --done-line: #7a9c7a;
+    --high: #b5461f;
+    --med: #b98a1c;
+    --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #171613;
+      --card: #201f1b;
+      --ink: #ece9e1;
+      --ink-soft: #a6a297;
+      --line: #35332c;
+      --accent: #e07a4d;
+      --accent-soft: #3a2a20;
+      --accent-2: #7fb39f;
+      --accent-2-soft: #23332c;
+      --done-bg: #1f2b20;
+      --done-line: #6f9c78;
+      --high: #e07a4d;
+      --med: #e0b64d;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 14px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #171613;
+    --card: #201f1b;
+    --ink: #ece9e1;
+    --ink-soft: #a6a297;
+    --line: #35332c;
+    --accent: #e07a4d;
+    --accent-soft: #3a2a20;
+    --accent-2: #7fb39f;
+    --accent-2-soft: #23332c;
+    --done-bg: #1f2b20;
+    --done-line: #6f9c78;
+    --high: #e07a4d;
+    --med: #e0b64d;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 14px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+  }
+  html {
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Iowan Old Style', 'Georgia', 'Charter', serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 28px 18px 60px;
+  }
+
+  header {
+    margin-bottom: 22px;
+  }
+  .eyebrow {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  h1 {
+    font-size: 26px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+  .sub {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .progress-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin: 20px 0 26px;
+    box-shadow: var(--shadow);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+  .progress-num {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: 'Iowan Old Style', Georgia, serif;
+  }
+  .progress-label {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .bar-track {
+    width: 100%;
+    height: 8px;
+    background: var(--accent-soft);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+    transition: width 0.35s ease;
+    width: 0%;
+  }
+  .days-until {
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .days-until b { color: var(--ink); }
+
+  .day-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .day-card.all-done { border-color: var(--done-line); }
+
+  .day-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .day-badge {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    background: var(--accent-2-soft);
+    color: var(--accent-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.1;
+    text-align: center;
+  }
+  .day-card.all-done .day-badge {
+    background: var(--done-bg);
+    color: var(--done-line);
+  }
+  .day-info { flex: 1 1 auto; min-width: 0; }
+  .day-date {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 2px;
+  }
+  .day-title {
+    font-size: 16.5px;
+    font-weight: 600;
+  }
+  .day-meta {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .priority-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--high);
+  }
+  .priority-dot.med { background: var(--med); }
+  .day-count {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .chevron {
+    width: 16px;
+    height: 16px;
+    color: var(--ink-soft);
+    transition: transform 0.2s ease;
+    flex: 0 0 auto;
+  }
+  .day-card.open .chevron { transform: rotate(90deg); }
+
+  .day-body {
+    display: none;
+    padding: 0 16px 16px;
+  }
+  .day-card.open .day-body { display: block; }
+
+  .section-label {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 14px 0 6px;
+  }
+  .section-label:first-child { margin-top: 4px; }
+
+  ul.task-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .task {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 4px;
+    border-radius: 8px;
+  }
+  .task:hover { background: var(--accent-soft); }
+  .task input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 19px;
+    height: 19px;
+    flex: 0 0 auto;
+    margin-top: 2px;
+    border: 1.5px solid var(--line);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s ease;
+  }
+  .task input[type="checkbox"]:checked {
+    background: var(--done-line);
+    border-color: var(--done-line);
+  }
+  .task input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(40deg);
+  }
+  .task label {
+    font-size: 14.5px;
+    line-height: 1.45;
+    cursor: pointer;
+  }
+  .task.checked label {
+    color: var(--ink-soft);
+    text-decoration: line-through;
+    text-decoration-color: var(--done-line);
+  }
+
+  .resources {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-top: 24px;
+    box-shadow: var(--shadow);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .resources h2 {
+    font-family: 'Iowan Old Style', Georgia, serif;
+    font-size: 16px;
+    margin: 0 0 10px;
+  }
+  .resources ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.9;
+  }
+  .resources a { color: var(--accent-2); text-decoration: none; }
+  .resources a:hover { text-decoration: underline; }
+
+  .reset-row {
+    text-align: center;
+    margin-top: 26px;
+  }
+  .reset-btn {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: none;
+    border: 1px solid var(--line);
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .reset-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  .expand-all {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12.5px;
+    color: var(--accent-2);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 0 14px;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Technical Interview · Oct 4, 2026</p>
+    <h1>14-Day Prep Tracker</h1>
+    <p class="sub">Java · OOP · SQL · Git · Web/API · your Kudumbam Expense Tracker project. Tap a day to open it, check things off as you go — your progress is saved on this device.</p>
+  </header>
+
+  <div class="progress-card">
+    <div class="progress-top">
+      <span class="progress-num" id="progressNum">0%</span>
+      <span class="progress-label" id="progressLabel">0 of 0 tasks done</span>
+    </div>
+    <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+    <div class="days-until" id="daysUntil"></div>
+  </div>
+
+  <button class="expand-all" id="expandAllBtn">Expand all days</button>
+
+  <div id="daysContainer"></div>
+
+  <div class="resources">
+    <h2>Resources to lean on</h2>
+    <ul>
+      <li><a href="https://www.youtube.com/watch?v=BGTx91t8q50" target="_blank" rel="noopener">Telusko's Java course</a> — your main video resource for Java + OOP</li>
+      <li><a href="https://sqlbolt.com/" target="_blank" rel="noopener">SQLBolt</a> — interactive SQL lessons, type real queries</li>
+      <li><a href="https://git-scm.com/book/en/v2" target="_blank" rel="noopener">Pro Git (official book)</a> — read the basics + recording-changes chapters</li>
+      <li>HackerRank (Java → Easy) and LeetCode (Easy) for coding practice</li>
+      <li>GeeksforGeeks for quick concept lookups — 10 min max, then write your own example</li>
+    </ul>
+  </div>
+
+  <div class="reset-row">
+    <button class="reset-btn" id="resetBtn">Reset all progress</button>
+  </div>
+</div>
+
+<script>
+const DAYS = [
+  {
+    id: "d1", date: "Sep 20", title: "Java Fundamentals", priority: "high",
+    sections: [
+      { label: "Learn (Telusko 00:13→02:36)", tasks: [
+        "Variables, data types, operators",
+        "if/else, switch",
+        "for, while, do-while loops",
+        "Scanner input",
+        "Methods"
+      ]},
+      { label: "Code yourself", tasks: [
+        "Even/odd checker",
+        "Positive/negative checker",
+        "Largest of 3 numbers",
+        "Simple calculator",
+        "Factorial",
+        "Fibonacci"
+      ]},
+      { label: "Interview questions", tasks: [
+        "What is Java?",
+        "Why is Java platform independent?",
+        "JDK vs JRE vs JVM",
+        "What is a variable / data type / method?"
+      ]}
+    ]
+  },
+  {
+    id: "d2", date: "Sep 21", title: "Arrays + Strings", priority: "high",
+    sections: [
+      { label: "Learn", tasks: [
+        "Arrays: create, access, loop",
+        "Find max / min in array, sort, search",
+        "Strings: length(), charAt(), equals(), substring(), case methods"
+      ]},
+      { label: "Code yourself (no copying)", tasks: [
+        "Reverse an array",
+        "Find largest / smallest number",
+        "Find second largest",
+        "Reverse a string",
+        "Check palindrome",
+        "Count vowels",
+        "Count characters"
+      ]}
+    ]
+  },
+  {
+    id: "d3", date: "Sep 22", title: "OOP — Part 1", priority: "high",
+    sections: [
+      { label: "Learn", tasks: [
+        "Class & object",
+        "Constructor and `this`",
+        "Encapsulation",
+        "Getters / setters"
+      ]},
+      { label: "Practice", tasks: [
+        "Build a Student class + create objects",
+        "Build a BankAccount class (deposit/withdraw)"
+      ]},
+      { label: "Interview questions", tasks: [
+        "What is a class? What is an object?",
+        "What is a constructor?",
+        "What is encapsulation, and why getters/setters?"
+      ]}
+    ]
+  },
+  {
+    id: "d4", date: "Sep 23", title: "OOP — Part 2", priority: "high",
+    sections: [
+      { label: "Learn", tasks: [
+        "Inheritance",
+        "Polymorphism (overloading vs overriding)",
+        "Abstraction",
+        "Interfaces",
+        "Memorize the 4 pillars"
+      ]},
+      { label: "Practice", tasks: [
+        "Write a small example for each pillar"
+      ]},
+      { label: "Interview prep", tasks: [
+        "Can explain OOP with a real-world example (e.g. Car → BMW)"
+      ]}
+    ]
+  },
+  {
+    id: "d5", date: "Sep 24", title: "Coding + Problem Solving", priority: "high",
+    sections: [
+      { label: "Numbers", tasks: [
+        "Prime number check",
+        "Palindrome number",
+        "Reverse a number",
+        "Armstrong number",
+        "Factorial",
+        "Fibonacci",
+        "Sum of digits"
+      ]},
+      { label: "Arrays", tasks: [
+        "Maximum / second maximum",
+        "Find duplicate elements",
+        "Find missing number",
+        "Reverse array"
+      ]},
+      { label: "Strings", tasks: [
+        "Reverse string",
+        "Palindrome string",
+        "Character frequency"
+      ]},
+      { label: "Target", tasks: [
+        "Solved 10–15 easy problems on HackerRank/LeetCode"
+      ]}
+    ]
+  },
+  {
+    id: "d6", date: "Sep 25", title: "SQL + DBMS", priority: "high",
+    sections: [
+      { label: "SQLBolt lessons", tasks: [
+        "SELECT, WHERE, filtering",
+        "ORDER BY + review",
+        "JOIN + OUTER JOIN",
+        "NULL, expressions, aggregates",
+        "INSERT, UPDATE, DELETE",
+        "CREATE TABLE"
+      ]},
+      { label: "DBMS concepts", tasks: [
+        "Database vs DBMS",
+        "Primary key, foreign key, candidate key",
+        "Normalization",
+        "JOIN & relationships"
+      ]}
+    ]
+  },
+  {
+    id: "d7", date: "Sep 26", title: "SQL Practice + DBMS Interview", priority: "high",
+    sections: [
+      { label: "Write queries yourself", tasks: [
+        "Basic SELECT / WHERE / ORDER BY on sample tables",
+        "INNER JOIN, LEFT JOIN",
+        "GROUP BY, HAVING",
+        "COUNT, SUM, AVG, MAX, MIN"
+      ]},
+      { label: "Interview questions", tasks: [
+        "Primary key vs foreign key",
+        "What is JOIN? What is normalization?",
+        "DELETE vs DROP",
+        "WHERE vs HAVING"
+      ]}
+    ]
+  },
+  {
+    id: "d8", date: "Sep 27", title: "Git + GitHub", priority: "med",
+    sections: [
+      { label: "Commands to know", tasks: [
+        "init, clone, status",
+        "add, commit, push, pull",
+        "branch, checkout, merge"
+      ]},
+      { label: "Do it for real", tasks: [
+        "Run git status / add / commit on one of your own projects"
+      ]},
+      { label: "Can explain clearly", tasks: [
+        "What is Git? What is GitHub?",
+        "What do add / commit / push each do?"
+      ]}
+    ]
+  },
+  {
+    id: "d9", date: "Sep 28", title: "Web + API", priority: "med",
+    sections: [
+      { label: "Learn", tasks: [
+        "HTML basics: tags, forms, input, button",
+        "HTTP request/response cycle",
+        "HTTP methods: GET, POST, PUT, PATCH, DELETE",
+        "REST API basics (e.g. GET /users, POST /expenses)"
+      ]}
+    ]
+  },
+  {
+    id: "d10", date: "Sep 29", title: "Middleware + Authentication + Your Stack", priority: "med",
+    sections: [
+      { label: "Learn", tasks: [
+        "What middleware is and where it sits in the request cycle",
+        "Authentication vs authorization, with an example"
+      ]},
+      { label: "Connect to your project", tasks: [
+        "Map middleware/auth concepts onto your own stack"
+      ]}
+    ]
+  },
+  {
+    id: "d11", date: "Sep 30", title: "⭐ Kudumbam Expense Tracker Day", priority: "high",
+    sections: [
+      { label: "Be ready to answer", tasks: [
+        "What is it and why did you build it?",
+        "What problem does it solve?",
+        "What technologies did you use?",
+        "How does login work?",
+        "How is the database connected?",
+        "How do you separate users' data?",
+        "What tables do you have?",
+        "Hardest problem + how you solved it",
+        "What would you improve?",
+        "What was YOUR specific contribution?"
+      ]},
+      { label: "Architecture", tasks: [
+        "Draw the User → Frontend → Server → Auth/API → PostgreSQL diagram on paper",
+        "Can explain the diagram out loud without notes"
+      ]}
+    ]
+  },
+  {
+    id: "d12", date: "Oct 1", title: "Technical Interview Revision", priority: "high",
+    sections: [
+      { label: "Answer these out loud", tasks: [
+        "Round 1 — Java & OOP (12 questions)",
+        "Round 2 — SQL & DBMS (7 questions)",
+        "Round 3 — Web/HTTP/REST/Middleware (5 questions)",
+        "Round 4 — Git (6 questions)"
+      ]}
+    ]
+  },
+  {
+    id: "d13", date: "Oct 2", title: "⭐ Full Mock Interview", priority: "high",
+    sections: [
+      { label: "Run the full simulation", tasks: [
+        "Part 1 — Self-introduction out loud (not read)",
+        "Part 2 — Explain the project in 2–3 minutes",
+        "Part 3 — Random technical Q&A (OOP/Java/SQL/Git/API/Middleware/SDLC)",
+        "Part 4 — 30 min, solve 2–3 coding problems with no help",
+        "Part 5 — HR questions (strengths, weakness, teamwork, 5-year plan)"
+      ]}
+    ]
+  },
+  {
+    id: "d14", date: "Oct 3", title: "Final Revision Only — No New Topics", priority: "high",
+    sections: [
+      { label: "Revise only (no new topics)", tasks: [
+        "30 min — Java/OOP cheat sheet",
+        "30 min — SQL + DBMS",
+        "20 min — Git + web",
+        "30 min — Kudumbam Expense Tracker",
+        "10–20 min — HR answers"
+      ]},
+      { label: "Logistics", tasks: [
+        "Resume printed/ready",
+        "Certificates ready if needed",
+        "Interview clothes ready",
+        "Laptop, charger, internet checked (if online)",
+        "Route/location checked (if offline)",
+        "Sleep properly"
+      ]}
+    ]
+  },
+  {
+    id: "d15", date: "Oct 4", title: "🚀 Interview Day", priority: "high",
+    sections: [
+      { label: "Morning — 30–45 min max", tasks: [
+        "Quick review: OOP",
+        "Quick review: SQL",
+        "Quick review: Git commands",
+        "Quick review: project architecture",
+        "Quick review: self-introduction",
+        "Stop studying — go in confident"
+      ]}
+    ]
+  }
+];
+
+const STORAGE_KEY = "interview-prep-checklist-v1";
+const OPEN_KEY = "interview-prep-open-v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+function saveState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function loadOpen() {
+  try {
+    const raw = localStorage.getItem(OPEN_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+function saveOpen(open) {
+  try { localStorage.setItem(OPEN_KEY, JSON.stringify(open)); } catch (e) {}
+}
+
+let state = loadState();
+let openState = loadOpen();
+
+function taskId(dayId, sIdx, tIdx) {
+  return dayId + "-" + sIdx + "-" + tIdx;
+}
+
+function computeDayCounts(day) {
+  let total = 0, done = 0;
+  day.sections.forEach((sec, sIdx) => {
+    sec.tasks.forEach((t, tIdx) => {
+      total++;
+      if (state[taskId(day.id, sIdx, tIdx)]) done++;
+    });
+  });
+  return { total, done };
+}
+
+function computeOverall() {
+  let total = 0, done = 0;
+  DAYS.forEach(day => {
+    const c = computeDayCounts(day);
+    total += c.total; done += c.done;
+  });
+  return { total, done };
+}
+
+function chevronSvg() {
+  return '<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>';
+}
+
+function render() {
+  const container = document.getElementById("daysContainer");
+  container.innerHTML = "";
+
+  DAYS.forEach(day => {
+    const counts = computeDayCounts(day);
+    const allDone = counts.total > 0 && counts.done === counts.total;
+    const isOpen = !!openState[day.id];
+
+    const card = document.createElement("div");
+    card.className = "day-card" + (allDone ? " all-done" : "") + (isOpen ? " open" : "");
+
+    const head = document.createElement("div");
+    head.className = "day-head";
+    head.innerHTML = `
+      <div class="day-badge">${day.date.replace(" ", "<br>")}</div>
+      <div class="day-info">
+        <div class="day-date">Day ${DAYS.indexOf(day) + 1} of ${DAYS.length}</div>
+        <div class="day-title">${day.title}</div>
+      </div>
+      <div class="day-meta">
+        <span class="priority-dot ${day.priority === 'med' ? 'med' : ''}"></span>
+        <span class="day-count">${counts.done}/${counts.total}</span>
+        ${chevronSvg()}
+      </div>
+    `;
+    head.addEventListener("click", () => {
+      openState[day.id] = !openState[day.id];
+      saveOpen(openState);
+      render();
+    });
+
+    const body = document.createElement("div");
+    body.className = "day-body";
+
+    day.sections.forEach((sec, sIdx) => {
+      const label = document.createElement("div");
+      label.className = "section-label";
+      label.textContent = sec.label;
+      body.appendChild(label);
+
+      const ul = document.createElement("ul");
+      ul.className = "task-list";
+      sec.tasks.forEach((t, tIdx) => {
+        const id = taskId(day.id, sIdx, tIdx);
+        const checked = !!state[id];
+        const li = document.createElement("li");
+        li.className = "task" + (checked ? " checked" : "");
+        li.innerHTML = `
+          <input type="checkbox" id="${id}" ${checked ? "checked" : ""}>
+          <label for="${id}">${t}</label>
+        `;
+        const cb = li.querySelector("input");
+        cb.addEventListener("change", () => {
+          state[id] = cb.checked;
+          saveState(state);
+          render();
+        });
+        ul.appendChild(li);
+      });
+      body.appendChild(ul);
+    });
+
+    card.appendChild(head);
+    card.appendChild(body);
+    container.appendChild(card);
+  });
+
+  const overall = computeOverall();
+  const pct = overall.total ? Math.round((overall.done / overall.total) * 100) : 0;
+  document.getElementById("progressNum").textContent = pct + "%";
+  document.getElementById("progressLabel").textContent = overall.done + " of " + overall.total + " tasks done";
+  document.getElementById("barFill").style.width = pct + "%";
+
+  const today = new Date();
+  const interview = new Date(2026, 9, 4);
+  const diffDays = Math.ceil((interview - today) / (1000 * 60 * 60 * 24));
+  const du = document.getElementById("daysUntil");
+  if (diffDays > 0) {
+    du.innerHTML = "<b>" + diffDays + " day" + (diffDays === 1 ? "" : "s") + "</b> until your interview (Oct 4, 2026)";
+  } else if (diffDays === 0) {
+    du.innerHTML = "<b>Today's the day.</b> Good luck!";
+  } else {
+    du.innerHTML = "Interview date has passed — hope it went well!";
+  }
+}
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (confirm("Reset all checked tasks? This can't be undone.")) {
+    state = {};
+    saveState(state);
+    render();
+  }
+});
+
+let allExpanded = false;
+document.getElementById("expandAllBtn").addEventListener("click", () => {
+  allExpanded = !allExpanded;
+  DAYS.forEach(d => { openState[d.id] = allExpanded; });
+  saveOpen(openState);
+  document.getElementById("expandAllBtn").textContent = allExpanded ? "Collapse all days" : "Expand all days";
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
